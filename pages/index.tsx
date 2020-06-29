@@ -1,13 +1,14 @@
 import { Layout, Menu, Typography, Input, Select, Space, Button } from "antd";
 import "../styles/styles.less";
+
 import { useState, ChangeEvent } from "react";
 import Post, { PostTypes } from "../types/Post";
 
 const { Header, Content, Footer } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
+const selectBefore = (value: PostTypes, handleChange: (value: PostTypes) => void) => {
 
-const selectBefore = (value: PostTypes, handleChange: <Function>) => {
   return (
     <Select defaultValue={value} className="select-before" onChange={handleChange}> 
       <Select.Option value={PostTypes.DAILY}>Daily</Select.Option>
@@ -15,25 +16,25 @@ const selectBefore = (value: PostTypes, handleChange: <Function>) => {
     </Select>
   )
 }
-const Home = () => {
+
+const Home: React.FC = () => {
   const [post, setPost] = useState<Post>({
     types: PostTypes.DAILY,
     content: '',
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPost({
+    setPost({ 
       ...post,
       content: e.target.value
     });
   };
 
-  const handleType = (e: FormEvent<HTMLSelectElement>) => {
-    console.log(e.target);
-    // setPost({
-    //   ...post,
-    //   types: PostTypes[e.target.value]
-    // })
+  const handleType = (value: PostTypes) => {
+    setPost({
+      ...post, 
+      types: value
+    });
   }
   const handleSubmit = (): void => {
     console.log(post);
