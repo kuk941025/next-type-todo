@@ -3,8 +3,9 @@ export enum PostTypes {
     URGENT
 }
 type Post = {
-    types: PostTypes, 
-    content: string,
+    types: PostTypes; 
+    content: string;
+    id: string;
 }
 
 export default Post;

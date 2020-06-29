@@ -1,16 +1,16 @@
 import { Layout, Menu, Typography, Input, Select, Space, Button } from "antd";
 import "../styles/styles.less";
-
 import { useState, ChangeEvent } from "react";
 import Post, { PostTypes } from "../types/Post";
+import PostItem from "../items/PostItem";
+import cuid from "cuid";
 
 const { Header, Content, Footer } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
 const selectBefore = (value: PostTypes, handleChange: (value: PostTypes) => void) => {
-
   return (
-    <Select defaultValue={value} className="select-before" onChange={handleChange}> 
+    <Select value={value} defaultValue={value} className="select-before" onChange={handleChange}>
       <Select.Option value={PostTypes.DAILY}>Daily</Select.Option>
       <Select.Option value={PostTypes.URGENT}>Urgent</Select.Option>
     </Select>
@@ -21,10 +21,12 @@ const Home: React.FC = () => {
   const [post, setPost] = useState<Post>({
     types: PostTypes.DAILY,
     content: '',
+    id: cuid()
   });
+  const [listPost, setList] = useState<Post[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPost({ 
+    setPost({
       ...post,
       content: e.target.value
     });
@@ -32,12 +34,23 @@ const Home: React.FC = () => {
 
   const handleType = (value: PostTypes) => {
     setPost({
-      ...post, 
+      ...post,
       types: value
     });
   }
   const handleSubmit = (): void => {
-    console.log(post);
+    setList(prev => {
+      prev.push(post);
+      setPost({
+        types: PostTypes.DAILY,
+        content: '',
+        id: cuid()
+      });
+      return prev;
+    })
+  }
+  const handleDelete = (id: string): void => {
+    setList(listPost.filter(item => item.id !== id));
   }
 
   return (
@@ -65,9 +78,15 @@ const Home: React.FC = () => {
                 Add
               </Button>
             </div>
-
-
           </Typography>
+          {listPost.map((item) => (
+            <PostItem
+              key={item.id}
+              id={item.id}
+              handleDelete={handleDelete}
+              types={item.types}
+              content={item.content} />
+          ))}
         </div>
       </Content>
       <Footer style={{ textAlign: 'center' }}>
