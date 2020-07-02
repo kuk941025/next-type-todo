@@ -8,6 +8,8 @@ export interface Props extends Post {
 const PostItem: React.FC<Props> = ({ content, types, handleDelete, id }) => {
     return (
         <Card
+            hoverable
+            onClick={() => console.log('clicked')}
             extra={<Button type="text" onClick={() => handleDelete(id)} style={{ color: 'red' }}>Delete</Button>}
             title={PostTypes[types]}
             style={{ margin: `16px 0px` }}>
